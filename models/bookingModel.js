@@ -1,38 +1,42 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const bookingSchema = new mongoose.Schema({
-  tour: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Tour",
-    required: [true, "Booking must belong to a Tour!"]
-  },
-  user: {
-    type: mongoose.Schema.ObjectId,
-    ref: "User",
-    required: [true, "Booking must belong to a User!"]
-  },
-  price: {
-    type: Number,
-    require: [true, "Booking must have a price."]
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now()
-  },
-  paid: {
-    type: Boolean,
-    default: false
-  }
+
+const bookingModel = new  mongoose.Schema({
+
+      tour:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tour',
+        required: [true, 'Booking Must Belong to a tour ']
+      },
+      user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'Booking Must Belong to a user ']
+      },
+      price: {
+        type: Number,
+        required: [true, 'Booking Must Belong to a price']
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now()
+      },
+      paid:{
+        type: Boolean,
+        default: true
+      }
 });
 
-bookingSchema.pre(/^find/, function(next) {
-  this.populate("user").populate({
-    path: "tour",
-    select: "name"
-  });
-  next();
-});
 
-const Booking = mongoose.model("Booking", bookingSchema);
+bookingModel.pre(/^find/, function(next){
+
+  this.populate('user').populate({
+    path: 'tour',
+    select: 'name'
+  })
+})
+
+
+const Booking = mongoose.model('Booking', bookingModel);
 
 export default Booking;
