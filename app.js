@@ -17,7 +17,6 @@ import tourRouter from "./routes/tourRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import reviewRouter from "./routes/reviewRoutes.js";
 import bookingRouter from "./routes/bookingRoutes.js";
-import * as bookingController from "./controllers/bookingController.js";
 import viewRouter from "./routes/viewRoutes.js";
 import { fileURLToPath } from "url";
 
@@ -37,7 +36,7 @@ app.set("views", path.join(__dirname, "views"));
 // Implement CORS
 app.use(cors());
 
-app.options("*", cors());
+app.options("*", cors()); 
 // app.options('/api/v1/tours/:id', cors());
 
 // Serving static files
@@ -57,12 +56,7 @@ const limiter = rateLimit({
 });
 app.use("/api", limiter);
 
-// Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
-app.post(
-  "/webhook-checkout",
-  bodyParser.raw({ type: "application/json" }),
-  bookingController.webhookCheckout
-);
+
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: "10kb" }));
@@ -89,7 +83,6 @@ app.use(
   })
 );
 
-app.use(compression());
 
 // Test middleware
 app.use((req, res, next) => {
