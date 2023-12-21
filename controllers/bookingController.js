@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import Tour from "../models/tourModel.js";
+import Booking from '../models/bookingModel.js'
 import catchAsync from "../utils/catchAsync.js";
 import dotenv from 'dotenv';
 import { dirname } from 'path';
@@ -14,12 +15,13 @@ export const getCheckoutSession = catchAsync(async (req, res, next) => {
   
   const tour = await Tour.findById(req.params.tourId);
   console.log(tour);
+  console.log(req.user)
   // 2) Create checkout session
   try{
     const session = await stripe.checkout.sessions.create({
    
       mode: 'payment',
-      success_url: `${req.protocol}://${req.get("host")}/`,
+      success_url: `${req.protocol}://${req.get("host")}/?tour=${req.params.tourId}&user=${req.user._id}&price=${tour.price}`,
       cancel_url: `${req.protocol}://${req.get("host")}/tours/${tour.slug}`,
       customer_email: req.user.email,
       client_reference_id: req.params.tourId,
@@ -50,4 +52,18 @@ export const getCheckoutSession = catchAsync(async (req, res, next) => {
   }
 });
 
+
+export const  createBookingCheckout = catchAsync(async(req, res , next)=>{
+
+  //  this is Temp for create booking when the user charge  cuz it's not secure 
+  const {tour, user, price} = req.query;
+
+  if(!tour || !user || !price) return next();
+
+ const booking =  await Booking.create({tour, user, price});
+
+ console.log(booking);
+  
+  res.redirect(req.originalUrl.split('?')[0]);
+})
 
