@@ -1,4 +1,4 @@
-import crypo from "crypto";
+import crypto from "crypto";
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
@@ -91,6 +91,24 @@ userSchema.methods.changedPasswordAfter = function (JWTTimeStamp) {
   }
   return false;
 };
+
+// userSchema.methods.createPasswordResetToken = function () {
+//   // we create the token by using randomBytes from crypto module
+//   const resetToken = crypto.randomBytes(32).toString('hex');
+
+//   // we hashed the token we  created and store it in the field in the db for this user
+
+//   this.passwordResetToken = crypto
+//     .createHash('sha256')
+//     .update(resetToken)
+//     .digest('hex');
+
+//   // we specifiy the expire time for the token
+//   this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // to convert the min to milliseconds 60 * 1000
+
+
+//   return resetToken;
+// };
 
 
 userSchema.methods.createResetPasswordToken = function (){

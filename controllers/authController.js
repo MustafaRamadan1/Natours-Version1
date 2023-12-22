@@ -7,13 +7,16 @@ import AppError from "./../utils/appError.js";
 import Email from "./../utils/email.js";
 
 const signToken = id => {
+
   return jwt.sign({ id }, process.env.SECERT_KEY, {
     expiresIn: process.env.EXPIRE_TIME
   });
 };
 
 const createSendToken = (user, statusCode, req, res) => {
+
   const token = signToken(user._id);
+
 
   res.cookie("jwt", token, {
     expires: new Date(Date.now() + process.env.JWT_COOKIES_EXPIRES_IN * 24 * 60 * 60 * 1000),
@@ -34,17 +37,26 @@ const createSendToken = (user, statusCode, req, res) => {
 };
 
 export const signup = catchAsync(async (req, res, next) => {
+ try
+{
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm
+    confirmPassword: req.body.passwordConfirm
   });
 
+
+  
   const url = `${req.protocol}://${req.get("host")}/me`;
   await new Email(newUser, url).sendWelcome();
 
   createSendToken(newUser, 201, req, res);
+}
+catch(err){
+  console.log(err);
+}
+
 });
 
 export const login = catchAsync(async (req, res, next) => {
@@ -55,7 +67,8 @@ export const login = catchAsync(async (req, res, next) => {
   }
   // 2) Check if user exists && password is correct
   const user = await User.findOne({ email}).select('+password');
-  
+  console.log(user);
+
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Incorrect email or password", 401));
   }
@@ -112,13 +125,11 @@ export const isLoggedIn = async (req, res, next) => {
     try {
       // 1) verify token
       const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.SECERT_KEY);
-
       // 2) Check if user still exists
       const currentUser = await User.findById(decoded.id);
       if (!currentUser) {
         return next();
       }
-
       // 3) Check if user changed password after the token was issued
       if (currentUser.changedPasswordAfter(decoded.iat)) {
         return next();

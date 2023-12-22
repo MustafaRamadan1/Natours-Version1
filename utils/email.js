@@ -1,8 +1,10 @@
 import nodemailer from "nodemailer";
 import pug from "pug";
-import HtmlToText from "html-to-text";
+import htmlToText from 'html-to-text';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const { htmlToText } = HtmlToText;
 
 // For create email obj to send actual emails.
 export default class Email {
@@ -10,12 +12,12 @@ export default class Email {
     this.to = user.email;
     this.firstName = user.name.split(" ")[0];
     this.url = url;
-    this.from = `Lakshman Gope <${process.env.EMAIL_FROM}>`;
+    this.from = `${process.env.EMAIL_FROM}`;
   }
 
   // Create different transports for different environments
   newTransport() {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV === "Production") {
       // Sendgrid
       return nodemailer.createTransport({
         service: "SendGrid",
@@ -51,7 +53,6 @@ export default class Email {
       to: this.to,
       subject,
       html,
-      text: htmlToText.fromString(html)
     };
 
     // 3) Create a transport and send email
