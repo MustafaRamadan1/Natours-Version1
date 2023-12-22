@@ -59,30 +59,9 @@ export const resizeTourImages = catchAsync(async (req, res, next) => {
   next();
 });
 
-// const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
-// export const checkID = (req, res, next, val) => {
-//   console.log(`Tour id is: ${val}`);
-//   if (req.params.id * 1 > tours.length) {
-//     return res.status(404).json({
-//       status: 'fail',
-//       message: 'Invalid ID'
-//     });
-//   }
 
-//   next();
-// };
 
-// export const checkBody = (req, res, next) => {
-//   if (!req.body.name || !req.body.price) {
-//     return res.status(400).json({
-//       status: 'Fail',
-//       message: 'Missing name or price'
-//     });
-//   }
-
-//   next();
-// };
 
 export const aliasTopTours = (req, res, next) => {
   req.query.limit = "5";
@@ -190,7 +169,6 @@ export const getToursWithin = catchAsync(async (req, res, next) => {
     next(new AppError("Please provide latitutr and longitude in the format lat,lng.", 400));
   }
 
-  // console.log(distance, lat, lng, unit);
 
   const tours = await Tour.find({
     startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } }

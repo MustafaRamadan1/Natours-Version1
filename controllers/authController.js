@@ -7,7 +7,6 @@ import AppError from "./../utils/appError.js";
 import Email from "./../utils/email.js";
 
 const signToken = id => {
-  console.log(process.env.SECERT_KEY)
   return jwt.sign({ id }, process.env.SECERT_KEY, {
     expiresIn: process.env.EXPIRE_TIME
   });

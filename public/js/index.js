@@ -44,10 +44,8 @@ if (bookBtn)
 if (loginForm)
   loginForm.addEventListener("submit", e => {
     e.preventDefault();
-    console.log('welcome to the login')
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    console.log(email, password);
     login(email, password);
   });
 
@@ -58,7 +56,6 @@ if (userDataForm)
     e.preventDefault();
     const form = new FormData();
     form.append("name", document.getElementById("name").value);
-    console.log(document.getElementById('name').value);
     form.append("email", document.getElementById("email").value);
     form.append("photo", document.getElementById("photo").files[0]);
 
@@ -86,4 +83,3 @@ const alertMessage = document.querySelector("body").dataset.alert;
 if (alertMessage) showAlert("success", alertMessage, 20);
 
 
-console.log(`the script now run`);

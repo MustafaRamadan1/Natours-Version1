@@ -11,10 +11,10 @@ export const login = async (email, password) => {
         password
       }
     });
-    console.log(res);
+  
 
     if (res.data.status === "success") {
-      console.log(res);
+      
       showAlert("success", "Logged in successfully!");
       window.setTimeout(() => {
         location.assign("/");

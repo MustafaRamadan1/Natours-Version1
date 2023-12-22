@@ -9,11 +9,10 @@ import {showAlert} from './alerts'
   try{
       //1) get the checkout session from the server  
 
-  console.log('we are in the book tour item list')
-  const session = await axios(`http://localhost:3000/api/v1/bookings/checkout-session/${tourId }`);
+ 
+  const session = await axios(`/api/v1/bookings/checkout-session/${tourId }`);
 
 
-  console.log(session);
 
 
   
@@ -25,7 +24,7 @@ import {showAlert} from './alerts'
   }
 
   catch(err){
-    console.log(err);
+    
     showAlert('error', err)
   }
 
