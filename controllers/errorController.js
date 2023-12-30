@@ -110,6 +110,7 @@ export default function globalErrorHandler(err, req, res, next) {
   if (process.env.NODE_ENV === "development") {
     sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === "Production") {
+    console.log(err)
     let error = { ...err };
     error.message = err.message;
 
