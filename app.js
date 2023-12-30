@@ -7,7 +7,6 @@ import mongoSanitize from "express-mongo-sanitize";
 import xss from "xss-clean";
 import hpp from "hpp";
 import cookieParser from "cookie-parser";
-import bodyParser from "body-parser";
 import compression from "compression";
 import cors from "cors";
 
@@ -17,6 +16,7 @@ import tourRouter from "./routes/tourRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import reviewRouter from "./routes/reviewRoutes.js";
 import bookingRouter from "./routes/bookingRoutes.js";
+import {webhookCheckout} from './controllers/bookingController';
 import viewRouter from "./routes/viewRoutes.js";
 import { fileURLToPath } from "url";
 
@@ -57,6 +57,7 @@ const limiter = rateLimit({
 app.use("/api", limiter);
 
 
+app.post('/webhook-checkout', express.raw({type:'application/json'}), webhookCheckout)
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: "10kb" }));
@@ -92,6 +93,7 @@ app.use(compression());
 //   // console.log(req.cookies);
 //   next();
 // });
+
 
 // 3) ROUTES
 app.use("/", viewRouter);
