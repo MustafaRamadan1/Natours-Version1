@@ -16,7 +16,7 @@ export const getCheckoutSession = catchAsync(async (req, res, next) => {
   // 1) Get the currently booked tour
   
   const tour = await Tour.findById(req.params.tourId);
-  
+
   // 2) Create checkout session
   try{
     const session = await stripe.checkout.sessions.create({
@@ -42,7 +42,8 @@ export const getCheckoutSession = catchAsync(async (req, res, next) => {
         }
       ]
     });
-  
+    
+    console.log(session);
     // 3) Create session as response
     res.status(200).json({
       status: "success",
@@ -78,7 +79,7 @@ const createBookingCheckout = async session =>{
 }
 
 
-export const webhookCheckout = (req, res , next)=>{
+export const  webhookCheckout = (req, res , next)=>{
 
     let event;
     try{
@@ -91,7 +92,7 @@ export const webhookCheckout = (req, res , next)=>{
     }
 
 
-    if(event.type == 'checkout.session.complete')
+    if(event.type == 'checkout.session.completed')
       createBookingCheckout(event.data.object);
 
       res.status(200).json({received: true})
